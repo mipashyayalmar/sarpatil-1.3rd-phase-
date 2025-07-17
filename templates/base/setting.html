@@ -1,0 +1,267 @@
+{% extends 'base/main_base.html' %}
+{% block body %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+
+<!-- Mirrored from friendkit.cssninja.io/options-settings.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 07 Jun 2025 06:29:29 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+
+    <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}" />
+
+    <!-- Google Tag Manager -->
+    <script>
+        ;
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || []
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            })
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : ''
+            j.async = true
+            j.src = '../www.googletagmanager.com/gtm5445.html?id=' + i + dl
+            f.parentNode.insertBefore(j, f)
+        })(window, document, 'script', 'dataLayer', 'GTM-KQHJPZP')
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:600,700,800,900" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/app.css" />
+    <link rel="stylesheet" href="{% static 'assets/css/core.css" />
+</head>
+
+<body class="is-white">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQHJPZP" height="0" width="0" style="display: none; visibility: hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Pageloader -->
+    <div class="pageloader"></div>
+    <div class="infraloader is-active"></div>
+    <div class="navbar navbar-v1 is-inline-flex is-transparent no-shadow no-background is-landing is-hidden-mobile">
+        <div class="container is-desktop">
+            <div class="navbar-brand">
+                <a href="{% url 'index' %}" class="navbar-item">
+                    <img class="logo" src="{% static 'assets/img/vector/logo/bjplogo.png' %}" alt="" />
+                </a>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-start">
+                    <div class="navbar-item">
+                        <a href="#buy">Buy</a>
+                    </div>
+                    <div class="navbar-item">
+                        <a href="#demos-section">Demos</a>
+                    </div>
+                    <div class="navbar-item">
+                        <a href="" target="_blank">Docs</a>
+                    </div>
+                </div>
+                {% comment %} Kondhawa dhawade vikas {% endcomment %}
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                         {% if request.user.profile.image %}
+                         <a id="signup-button" href="{% url 'sign-up' %}" class="button is-cta is-solid primary-button raised">
+                            कोंडवे धावडे विकास
+                        </a>
+                        {% else %}
+                        <div class="navbar-item">
+                            <a href="{% url 'sign-in' %}">Login</a>
+                        </div>
+                        <a id="signup-button" href="{% url 'sign-up' %}" class="button is-cta is-solid primary-button raised">
+                            Sign Up
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar mobile-navbar is-landing is-hidden-desktop" aria-label="main navigation">
+        <!-- Brand -->
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{% url 'index' %}">
+                <img class="dark-mobile-logo" src="{% static 'assets/img/vector/logo/bjplogo.png' %}" alt="" />
+                <img class="light-mobile-logo" src="{% static 'assets/img/vector/logo/whitebjp.png' %}" alt="" />
+            </a>
+
+            <!-- Mobile menu toggler icon -->
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <!-- Navbar mobile menu -->
+        <div class="navbar-menu">
+            <!-- Account -->
+            <div class="navbar-item has-dropdown">
+                <div class="navbar-link">
+                    {% if request.user.profile.image %}
+                        <img class="is-rounded" src="{{ request.user.profile.image.url }}" data-user-popover="{{ request.user.id }}" alt="" />
+                        {% if user.profile.first_name %}
+                                     <span class="is-heading">{{ user.profile.first_name|title }} {{ user.profile.last_name|title }}</span>
+                        {% else %}
+                                     <span class="is-heading">{{ user.username }}</span>
+                        {% endif %}
+                    {% else %}
+                         <img src="https://via.placeholder.com/150x150" data-demo-src="{% static 'assets/img/avatars/sarpatil.jpg' %}" alt="" />
+                         <span class="is-heading">Welcome</span>
+                    {% endif %}
+                    
+                </div>
+
+                <!-- Mobile Dropdown -->
+                <div class="navbar-dropdown">
+                    <a href="#" class="navbar-item">Buy</a>
+                    <a href="#demos-section" class="navbar-item">Demos</a>
+                    <a href="" class="navbar-item">Docs</a>
+                    {% comment %} Kondhawa Dhawade Vikas {% endcomment %}
+                     {% if request.user.profile.image %}
+                     <a href="{% url 'sign-up' %}" class="button is-fullwidth is-solid accent-button">कोंडवे धावडे विकास</a>
+                     {% else %}
+                    <a href="{% url 'sign-in' %}" class="navbar-item">Login</a>
+                    <a href="{% url 'sign-up' %}" class="button is-fullwidth is-solid accent-button">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="landing-wrapper">
+        <div id="friendkit-demo-landing" class="hero is-fullheight landing-hero-wrapper">
+            <div id="particles-js"></div>
+            <div class="hero-body">
+                <div class="container is-desktop">
+                    <div class="columns landing-caption is-vcentered">
+                        <div class="column is-7">
+                            <img src="{% static 'assets/img/illustrations/characters/friends.svg' %}" alt="" />
+                        </div>
+                        <div class="column is-5">
+                            <h2>SARPATIL</h2>
+                            <h3>Sarpatil Social Media  v1.0.0</h3>
+                            <div class="buttons">
+                                <a href="{% url 'sign-in' %}" class="button">Get Started</a>
+                                <button id="tour-start" class="button is-hidden-mobile">
+                                    Take The Tour
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="footer-light-medium">
+            <div class="container is-desktop">
+                <div class="footer-head">
+                    <div class="head-text">
+                        <h3>Ready to get started?</h3>
+                        <p>Create your free account now</p>
+                    </div>
+                    <div class="head-action">
+                        <div class="buttons">
+                             {% if request.user.profile.image %}
+                            <a href="{% url 'sign-in' %}" target="_blank" class="button is-solid primary-button raised action-button">माझा विकास</a>
+                             {% else %}
+                            <a href="{% url 'sign-in' %}" target="_blank" class="button is-solid primary-button raised action-button">Login now</a>
+                            {% endif %}
+                            <a class="button chat-button">Chat with us</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns footer-body">
+                    <!-- Column -->
+                    <div class="column is-4">
+                        <div class="pt-10 pb-10">
+                            <img class="small-footer-logo" src="{% static 'assets/img/vector/logo/bjplogo.png' %}" alt="" />
+                            <div class="footer-description">
+                               This is Sirpatil's website, specifically used to showcase his work as a former Sarpanch (Kondhawa Dhawade) and BJP Sachiv (Secretary) in the Khadakwasla Matadar Sangh, as well as his contributions to public peace and order in Uttamnagar under the Sabsad Police Station.
+                            </div>
+                        </div>
+                        <div>
+                            <span class="moto"
+            >Designed and coded with <i data-feather="heart"></i> by Mipashya </span>
+                            <div class="social-links">
+                                <a href="https://www.facebook.com/umeshrsarpatil/?ref=pro_upsell_xav_ig_profile_page_web">
+                                    <span class="icon"><i data-feather="facebook"></i></span>
+                                </a>
+                                <a href="#">
+                                    <span class="icon"><i data-feather="twitter"></i></span>
+                                </a>
+                                <a href="https://www.instagram.com/umeshsarpatil1212/">
+                                    <span class="icon"><i data-feather="instagram"></i></span>
+                                </a>
+                                <a href="#">
+                                    <span class="icon"><i data-feather="linkedin"></i></span>
+                                </a>
+                                <a href="#">
+                                    <span class="icon"><i data-feather="youtube"></i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                    <div class="column is-6 is-offset-2">
+                        <div class="columns">
+                            <!-- Column -->
+                            <div class="column">
+                                <ul class="footer-column">
+                                    <li class="column-header">Sarpatil</li>
+                                    <li class="column-item"><a href="#">Home</a></li>
+                                    <li class="column-item"><a href="#">Membership</a></li>
+                                    <li class="column-item"><a href="#">Get started</a></li>
+                                    <li class="column-item"><a href="#">Help</a></li>
+                                </ul>
+                            </div>
+                            <!-- Column -->
+                            <div class="column">
+                                <ul class="footer-column">
+                                    <li class="column-header">Help</li>
+                                    <li class="column-item"><a href="#">Learning</a></li>
+                                    <li class="column-item"><a href="#">Support center</a></li>
+                                    <li class="column-item"><a href="#">Frequent questions</a></li>
+                                    <li class="column-item"><a href="#">Schedule a demo</a></li>
+                                </ul>
+                            </div>
+                            <!-- Column -->
+                            <div class="column">
+                                <ul class="footer-column">
+                                    <li class="column-header">Terms</li>
+                                    <li class="column-item"><a href="#">Terms of Service</a></li>
+                                    <li class="column-item"><a href="#">Privacy policy</a></li>
+                                    <li class="column-item"><a href="#">SaaS services</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-copyright has-text-centered">
+                    <p>
+                        &copy; 2019-2020 | <a href="https://cssninja.io/">Mi_pashya</a> | All
+                        Rights Reserved.
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+</div>
+
+
+
+
+    {% endblock%}
