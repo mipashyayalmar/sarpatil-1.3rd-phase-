@@ -1101,33 +1101,37 @@
             <!-- Post header -->
             <div class="card-heading">
                 <div class="user-block">
-{% if post.user.profile.image %}
-    <img src="{{ post.user.profile.image.url }}" 
-         data-demo-src="{{ post.user.profile.image.url }}" 
-         data-user-popover="{{ post.user.id }}"
-         data-user-username="{{ post.user.username }}"
-         data-user-firstname="{{ post.user.profile.first_name|default:'' }}"
-         data-user-lastname="{{ post.user.profile.last_name|default:'' }}"
-         data-user-location="{{ post.user.profile.location|default:'' }}"
-         data-user-bio="{{ post.user.profile.bio|default:'' }}"
-         data-user-url="{{ post.user.profile.url|default:'' }}"
-         alt="{{ post.user.username }}" />
-{% endif %}
+                    {% if post.user.profile.image %}
+                        <img src="{{ post.user.profile.image.url }}"
+                             data-demo-src="{{ post.user.profile.image.url }}"
+                             data-user-popover="{{ post.user.id }}"
+                             data-user-username="{{ post.user.username }}"
+                             data-user-firstname="{{ post.user.profile.first_name|default:'' }}"
+                             data-user-lastname="{{ post.user.profile.last_name|default:'' }}"
+                             data-user-location="{{ post.user.profile.location|default:'' }}"
+                             data-user-bio="{{ post.user.profile.bio|default:'' }}"
+                             data-user-url="{{ post.user.profile.url|default:'' }}"
+                             alt="{{ post.user.username }}" />
+                    {% else %}
+                        <img src="{% static 'assets/img/avatars/placeholder.jpg' %}" alt="{{ post.user.username }}" />
+                    {% endif %}
                     <div class="user-info">
                         <a href="{{ post.user.username }}">
                             {% if post.user.profile.first_name %}
-                                {{ post.user.profile.first_name|title }} {{ post.user.profile.last_name|title }}{% if post.user.profile.prime_member %}<img class="prime-tick" src="{% static 'assets/img/tick.png' %}" alt="">
+                                {{ post.user.profile.first_name|title }} {{ post.user.profile.last_name|title }}
+                                {% if post.user.profile.prime_member %}
+                                    <img class="prime-tick" src="{% static 'assets/img/tick.png' %}" alt="">
                                 {% endif %}
                             {% else %}
                                 {{ post.user.username }}
-                                {% if post.user.profile.prime_member %}<img class="prime-tick" src="{% static 'assets/img/tick.png' %}" alt="">
+                                {% if post.user.profile.prime_member %}
+                                    <img class="prime-tick" src="{% static 'assets/img/tick.png' %}" alt="">
                                 {% endif %}
                             {% endif %}
                         </a>
                         <span class="time">{{ post.posted }}</span>
                     </div>
                 </div>
-
                 <div class="dropdown is-spaced is-right is-neutral dropdown-trigger">
                     <div>
                         <div class="button">
@@ -1171,119 +1175,90 @@
             <!-- Post body -->
             <div class="card-body">
                 <div class="post-text">
-                    <p>
-                        With caption
-                        <a href="#">{{ post.caption }}</a>
-                    </p>
+                    <p>{{ post.caption }}</p>
                 </div>
                 <div class="post-image">
                     {% if post.picture %}
-                    <a data-fancybox="post{{ post.id }}" data-lightbox-type="comments" data-thumb="{{ post.picture.url }}" href="{% url 'post-details' post.id %}" data-demo-href="{{ post.picture.url }}">
-                        <img src="{{ post.picture.url }}" data-demo-src="{{ post.picture.url }}" alt="" />
-                    </a>
-                    
+                        <a data-fancybox="post{{ post.id }}" data-lightbox-type="comments" data-thumb="{{ post.picture.url }}"
+                           href="{% url 'post-details' post.id %}" data-demo-href="{{ post.picture.url }}">
+                            <img src="{{ post.picture.url }}" data-demo-src="{{ post.picture.url }}" alt="" />
+                        </a>
                     {% elif post.video or post.video_link %}
-                    <!-- Featured youtube video -->
-                                    <div class="post-link is-video">
-                                        <!-- Link image -->
-                                         {% if post.video %}
-                                        <div class="link-image">
-                                            <img src="https://via.placeholder.com/300x300" data-demo-src="{% if post.profile_video %}{{ post.profile_video.url }}{% endif %}" alt="" />
-                                            <div class="video-overlay"></div>
-                                            <a class="video-button" data-fancybox href="{{ post.video.url }}">
-                                                <img src="{% static 'assets/img/icons/video/play.svg' %}" alt="" />
-                                            </a>
-                                         {% else %}
-                                        <div class="link-image">
-                                            <img src="https://via.placeholder.com/300x300" data-demo-src="{% if post.profile_video %}{{ post.profile_video.url }}{% endif %}" alt="" />
-                                            <div class="video-overlay"></div>
-                                            <a class="video-button" data-fancybox href="{% if post.video %}{{ post.video.url }}{% else %}{{ post.video_link }}{% endif %}">
-                                                <img src="{% static 'assets/img/icons/video/play.svg' %}" alt="" />
-                                            </a>
-                                        
-                                        {% endif %}
-                                         <!-- Link content -->
-                                         </div>
-                                        <div class="link-content">
-                                            <h4>
-                                                <a href="#">What's new in Bootstrap 4 ?</a>
-                                            </h4>
-                                            <p>
-                                                Before I create the new Bootstrap 4 crash course I want to go over
-                                                some of the changes from Bootstrap 3.
-                                            </p>
-                                            <small>Youtube.com</small>
-                                    </div>
-                                       
-                                    </div>
-                                    
-                                       
-                                    
-                                        {% endif %}
-                                        <!-- Post actions -->
-                    <!-- Rest of your template code -->
-                    <div class="like-wrapper">
-                        {% if request.user.is_authenticated %}
-                            <button class="like-button" data-post-id="{{ post.id }}" data-liked="{% if post|has_liked:request.user %}true{% else %}false{% endif %}">
-                                <i class="mdi mdi-heart {% if post|has_liked:request.user %}is-liked{% else %}not-liked{% endif %}"></i>
-                                <span class="like-overlay"></span>
-                            </button>
-                        {% else %}
-                            <button class="like-button" onclick="window.location.href='{% url 'sign-in' %}'">
-                                <i class="mdi mdi-heart not-liked"></i>
-                                <span class="like-overlay"></span>
-                            </button>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="fab-wrapper is-share">
-                        {% if request.user.is_authenticated %}
+                        <div class="post-link is-video">
+                            <div class="link-image">
+                                <img src="{% if post.video %}{{ post.video.url }}{% else %}https://via.placeholder.com/300x300{% endif %}" alt="" />
+                                <div class="video-overlay"></div>
+                                <a class="video-button" data-fancybox href="{% if post.video %}{{ post.video.url }}{% else %}{{ post.video_link }}{% endif %}">
+                                    <img src="{% static 'assets/img/icons/video/play.svg' %}" alt="" />
+                                </a>
+                            </div>
+                            <div class="link-content">
+                                <h4><a href="#">What's new in Bootstrap 4?</a></h4>
+                                <p>Before I create the new Bootstrap 4 crash course I want to go over some of the changes from Bootstrap 3.</p>
+                                <small>Youtube.com</small>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- Post actions -->
+                <div class="like-wrapper">
+                    {% if request.user.is_authenticated %}
+                        <button class="like-button" data-post-id="{{ post.id }}"
+                                data-liked="{% if post|has_liked:request.user %}true{% else %}false{% endif %}">
+                            <i class="mdi mdi-heart {% if post|has_liked:request.user %}is-liked{% else %}not-liked{% endif %}"></i>
+                            <span class="like-overlay"></span>
+                        </button>
+                    {% else %}
+                        <button class="like-button" onclick="window.location.href='{% url 'sign-in' %}'">
+                            <i class="mdi mdi-heart not-liked"></i>
+                            <span class="like-overlay"></span>
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="fab-wrapper is-share">
+                    {% if request.user.is_authenticated %}
                         <a href="javascript:void(0);" class="small-fab share-fab modal-trigger" data-modal="share-modal">
                             <i data-feather="link-2"></i>
                         </a>
-                        {% else %}
-                        <a onclick="window.location.href='{% url 'sign-in' %}'" class="small-fab share-fab modal-trigger" data-modal="share-modal">
+                    {% else %}
+                        <a onclick="window.location.href='{% url 'sign-in' %}'" class="small-fab share-fab modal-trigger"
+                           data-modal="share-modal">
                             <i data-feather="link-2"></i>
                         </a>
-                        {% endif %} 
-                    </div>
-                    <div class="fab-wrapper is-comment">
-                        {% if request.user.is_authenticated %}
-                            <a href="javascript:void(0);" class="small-fab">
-                                <i data-feather="message-circle"></i>
-                            </a>
-                        {% else %}
-                            <a onclick="window.location.href='{% url 'sign-in' %}'" class="small-fab">
-                                <i data-feather="message-circle"></i>
-                            </a>
-                        {% endif %}
-                    </div>
+                    {% endif %}
+                </div>
+                <div class="fab-wrapper is-comment">
+                    {% if request.user.is_authenticated %}
+                        <a href="javascript:void(0);" class="small-fab">
+                            <i data-feather="message-circle"></i>
+                        </a>
+                    {% else %}
+                        <a onclick="window.location.href='{% url 'sign-in' %}'" class="small-fab">
+                            <i data-feather="message-circle"></i>
+                        </a>
+                    {% endif %}
                 </div>
             </div>
             <!-- Post footer -->
-
-            <!-- Post footer -->
             <div class="card-footer">
-                <!-- In your index.html -->
                 <div class="likers-group">
                     {% for like in post.post_likes.all|slice:":4" %}
-                        <img src="{{ like.user.profile.image.url }}" 
-                            data-user-popover="{{ like.user.id }}" 
-                            data-user-username="{{ like.user.username }}"
-                            data-user-firstname="{{ like.user.profile.first_name }}"
-                            data-user-lastname="{{ like.user.profile.last_name }}"
-                            data-user-location="{{ like.user.profile.location }}"
-                            data-user-bio="{{ like.user.profile.bio }}"
-                            data-user-url="{{ like.user.profile.url }}"
-                            alt="{{ like.user.username }}" />
+                        <img src="{{ like.user.profile.image.url }}"
+                             data-user-popover="{{ like.user.id }}"
+                             data-user-username="{{ like.user.username }}"
+                             data-user-firstname="{{ like.user.profile.first_name|default:'' }}"
+                             data-user-lastname="{{ like.user.profile.last_name|default:'' }}"
+                             data-user-location="{{ like.user.profile.location|default:'' }}"
+                             data-user-bio="{{ like.user.profile.bio|default:'' }}"
+                             data-user-url="{{ like.user.profile.url|default:'' }}"
+                             alt="{{ like.user.username }}" />
                     {% endfor %}
                 </div>
                 <div class="likers-text">
                     <p>
                         {% with post.post_likes.all as likers %}
                             {% for like in likers|slice:":2" %}
-                                <a href="#">{{ like.user.username }}</a>
-                                {% if not forloop.last %}, {% endif %}
+                                <a href="#">{{ like.user.username }}</a>{% if not forloop.last %}, {% endif %}
                             {% endfor %}
                         {% endwith %}
                     </p>
@@ -1294,7 +1269,7 @@
                 <div class="social-count">
                     <div class="likes-count" data-post-id="{{ post.id }}">
                         <i data-feather="heart"></i>
-                        <span class="likes-count" data-post-id="{{ post.id }}">{{ post.likes }}</span>
+                        <span>{{ post.likes }}</span>
                     </div>
                     <div class="shares-count">
                         <i data-feather="link-2"></i>
@@ -1308,7 +1283,6 @@
             </div>
         </div>
         <!-- Post comments -->
-        
         <div class="comments-wrap is-hidden" id="comments-{{ post.id }}">
             <div class="comments-heading">
                 <h4>Comments <small>({{ post.comments.count }})</small></h4>
@@ -1339,13 +1313,15 @@
                             <input type="hidden" name="post_id" value="{{ post.id }}">
                             <div class="field">
                                 <p class="control">
-                                    <textarea class="textarea comment-textarea" name="body" rows="2" placeholder="Write a comment..." required id="comment-textarea-{{ post.id }}"></textarea>
+                                    <textarea class="textarea comment-textarea" name="body" rows="2"
+                                             placeholder="Write a comment..." required id="comment-textarea-{{ post.id }}"></textarea>
                                 </p>
                             </div>
                             <div class="actions">
                                 <div class="image is-32x32">
                                     {% if request.user.profile.image %}
-                                        <img class="is-rounded" src="{{ request.user.profile.image.url }}" data-user-popover="{{ request.user.id }}" alt="" />
+                                        <img class="is-rounded" src="{{ request.user.profile.image.url }}"
+                                             data-user-popover="{{ request.user.id }}" alt="" />
                                     {% else %}
                                         <img class="is-rounded" src="{% static 'assets/img/avatars/placeholder.jpg' %}" alt="" />
                                     {% endif %}
