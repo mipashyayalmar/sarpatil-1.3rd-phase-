@@ -57,19 +57,19 @@
                     {% endif %}
                         <br><br>
                        {% if request.user.is_authenticated and request.user != profile.user %}
-    <a class="btn profile-edit-btn follow-toggle {% if follow_status %}followed{% endif %}"
-            data-user-id="{{ profile.user.id }}"
-            data-username="{{ profile.user.username }}"
-            data-action="{% if follow_status %}unfollow{% else %}follow{% endif %}"
-            style="{% if follow_status %}color: red;{% else %}color: green;{% endif %}">
-        {% if follow_status %}
-            <i class="fas fa-user-minus"></i> Unfollow
-        {% else %}
-            <i class="fas fa-user-plus"></i> Follow
-        {% endif %}
-                    </a>
-    <br><br>
-{% endif %}
+                        <a class="btn profile-edit-btn follow-toggle {% if follow_status %}followed{% endif %}"
+                                data-user-id="{{ profile.user.id }}"
+                                data-username="{{ profile.user.username }}"
+                                data-action="{% if follow_status %}unfollow{% else %}follow{% endif %}"
+                                style="{% if follow_status %}color: red;{% else %}color: green;{% endif %}">
+                            {% if follow_status %}
+                                <i class="fas fa-user-minus"></i> Unfollow
+                            {% else %}
+                                <i class="fas fa-user-plus"></i> Follow
+                            {% endif %}
+                                        </a>
+                                <br><br>
+                            {% endif %}
                         {% if request.user.is_authenticated and request.user != profile.user %}
                                 <a href="{% url 'conversation' profile.user  %}" class="btn profile-edit-btn">Message</a> <br><br>
                         {% endif %}

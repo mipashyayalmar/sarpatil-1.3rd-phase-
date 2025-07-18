@@ -1176,20 +1176,40 @@
 
                     <!-- Rest of your template code -->
                     <div class="like-wrapper">
-                        <button class="like-button" data-post-id="{{ post.id }}" data-liked="{% if request.user.is_authenticated and post|has_liked:request.user %}true{% else %}false{% endif %}">
-                            <i class="mdi mdi-heart {% if request.user.is_authenticated and post|has_liked:request.user %}is-liked{% else %}not-liked{% endif %}"></i>
-                            <span class="like-overlay"></span>
-                        </button>
+                        {% if request.user.is_authenticated %}
+                            <button class="like-button" data-post-id="{{ post.id }}" data-liked="{% if post|has_liked:request.user %}true{% else %}false{% endif %}">
+                                <i class="mdi mdi-heart {% if post|has_liked:request.user %}is-liked{% else %}not-liked{% endif %}"></i>
+                                <span class="like-overlay"></span>
+                            </button>
+                        {% else %}
+                            <button class="like-button" onclick="window.location.href='{% url 'sign-in' %}'">
+                                <i class="mdi mdi-heart not-liked"></i>
+                                <span class="like-overlay"></span>
+                            </button>
+                        {% endif %}
                     </div>
+                    
                     <div class="fab-wrapper is-share">
+                        {% if request.user.is_authenticated %}
                         <a href="javascript:void(0);" class="small-fab share-fab modal-trigger" data-modal="share-modal">
                             <i data-feather="link-2"></i>
                         </a>
+                        {% else %}
+                        <a onclick="window.location.href='{% url 'sign-in' %}'" class="small-fab share-fab modal-trigger" data-modal="share-modal">
+                            <i data-feather="link-2"></i>
+                        </a>
+                        {% endif %} 
                     </div>
                     <div class="fab-wrapper is-comment">
-                        <a href="javascript:void(0);" class="small-fab">
-                            <i data-feather="message-circle"></i>
-                        </a>
+                        {% if request.user.is_authenticated %}
+                            <a href="javascript:void(0);" class="small-fab">
+                                <i data-feather="message-circle"></i>
+                            </a>
+                        {% else %}
+                            <a onclick="window.location.href='{% url 'sign-in' %}'" class="small-fab">
+                                <i data-feather="message-circle"></i>
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
