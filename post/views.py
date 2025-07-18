@@ -175,33 +175,50 @@ def post_comments(request, post_id):
     except Exception as e:
         logger.error(f"Error fetching comments for post_id {post_id}: {str(e)}")
         return JsonResponse({'error': str(e)}, status=500)
+
 @login_required
 def NewPost(request):
     user = request.user
-    profile = get_object_or_404(Profile, user=user)
     tags_obj = []
     
     if request.method == "POST":
         form = NewPostform(request.POST, request.FILES)
         if form.is_valid():
-            picture = form.cleaned_data.get('picture')
-            caption = form.cleaned_data.get('caption')
-            tag_form = form.cleaned_data.get('tags')
-            tag_list = list(tag_form.split(','))
-
-            for tag in tag_list:
-                t, created = Tag.objects.get_or_create(title=tag)
-                tags_obj.append(t)
-            p, created = Post.objects.get_or_create(picture=picture, caption=caption, user=user)
-            p.tags.set(tags_obj)
-            p.save()
-            return redirect('profile', request.user.username)
+            # Check if this is a duplicate request
+            if not request.session.get('posting_in_progress', False):
+                request.session['posting_in_progress'] = True
+                
+                post = form.save(commit=False)
+                post.user = user
+                
+                # Handle tags
+                tag_form = form.cleaned_data.get('tags', '')
+                if tag_form:
+                    tag_list = [tag.strip() for tag in tag_form.split(',') if tag.strip()]
+                    for tag in tag_list:
+                        t, created = Tag.objects.get_or_create(title=tag)
+                        tags_obj.append(t)
+                
+                post.save()
+                
+                if tags_obj:
+                    post.tags.set(tags_obj)
+                
+                # Clear the posting flag
+                request.session['posting_in_progress'] = False
+                
+                return redirect('profile', request.user.username)
+            else:
+                # If it's a duplicate request, just redirect
+                return redirect('profile', request.user.username)
     else:
         form = NewPostform()
+    
     context = {
         'form': form
     }
     return render(request, 'newpost.html', context)
+
 
 @login_required
 def Tags(request, tag_slug):

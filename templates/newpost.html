@@ -21,68 +21,123 @@
     <div class="container">
       <div class="phone-app-ddemo"></div>
       <div class="form-data">
-        <form action="" method="POST" enctype="multipart/form-data">
-			{% csrf_token %}
+        <form action="" method="POST" enctype="multipart/form-data" id="post-form">
+            {% csrf_token %}
           <div class="logo">
             <h3 style="padding: 20px; font-size: 20px;">Create New Post</h3>
           </div>
-          {{form.picture}} <br>
-          {{form.caption}} <br>
-          {{form.tags}} <br>
-          <button class="form-btn" type="submit">Post</button>
-          <!-- <a href="index.html" class="form-btn" type="submit">Log in</a> -->
+          
+          <!-- Picture and Video Fields -->
+          <div class="field-group">
+            <label>Upload Image</label>
+            {{form.picture}}
+          </div>
+
+                    <!-- Add these new fields after the video upload field -->
+          <div class="field-group" id="video-link-group" style="display: none;">
+              <label>Video Link (YouTube, Vimeo, etc.)</label>
+              {{form.video_link}}
+              <small class="text-muted">Paste a link to your video</small>
+          </div>
+
+
+          <div class="field-group">
+            <label>Upload Video</label>
+            {{form.video}}
+            <small class="text-muted">Note: Upload either image or video, not both</small>
+          </div>
+          
+          <div class="field-group" id="profile-video-group" style="display: none;">
+              <label>Video Thumbnail/Profile Image</label>
+              {{form.profile_video}}
+              <small class="text-muted">Upload a thumbnail for your video</small>
+          </div>
+          
+          <!-- Caption and Text Quote -->
+          <div class="field-group">
+            <label>Caption</label>
+            {{form.caption}}
+          </div>
+          
+          <div class="field-group">
+            <label>Text/Quote</label>
+            {{form.text_quote}}
+          </div> 
+          
+          <!-- Link and Location -->
+          <div class="field-group">
+            <label>Link</label>
+            {{form.link}}
+          </div>
+          
+          <div class="field-group">
+            <label>Location</label>
+            {{form.location}}
+          </div>
+          
+          <!-- Scheduled Date -->
+          <div class="field-group">
+            <label>Schedule Post (optional)</label>
+            {{form.scheduled_date}}
+          </div>
+          
+          <!-- Tags -->
+          <div class="field-group">
+            <label>Tags (comma separated)</label>
+            {{form.tags}}
+          </div>
+
+
+
+<script>
+// Show/hide video-related fields based on media selection
+function toggleVideoFields() {
+    const picture = document.querySelector('[name="picture"]').files.length > 0;
+    const video = document.querySelector('[name="video"]').files.length > 0;
+    
+    const videoLinkGroup = document.getElementById('video-link-group');
+    const profileVideoGroup = document.getElementById('profile-video-group');
+    
+    if (picture) {
+        videoLinkGroup.style.display = 'none';
+        profileVideoGroup.style.display = 'none';
+    } else if (video) {
+        videoLinkGroup.style.display = 'none';
+        profileVideoGroup.style.display = 'block';
+    } else {
+        videoLinkGroup.style.display = 'block';
+        profileVideoGroup.style.display = 'block';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    toggleVideoFields();
+});
+</script>
+          
+          <button class="form-btn" type="submit" id="submit-btn">Post</button>
           
         </form>
         
       </div>
     </div>
 
+    <!-- Footer remains the same -->
     <footer>
-      <div class="container">
-        <nav class="footer-nav">
-          <ul>
-            <li>
-              <a href="#">About us</a>
-            </li>
-            <li>
-              <a href="#">Support</a>
-            </li>
-            <li>
-              <a href="#">Press</a>
-            </li>
-            <li>
-              <a href="#">Api</a>
-            </li>
-            <li>
-              <a href="#">Jobs</a>
-            </li>
-            <li>
-              <a href="#">Privacy</a>
-            </li>
-            <li>
-              <a href="#">Terms</a>
-            </li>
-            <li>
-              <a href="#">Directory</a>
-            </li>
-            <li>
-              <a href="#">Profiles</a>
-            </li>
-            <li>
-              <a href="#">Hashtags</a>
-            </li>
-            <li>
-              <a href="#">Languages</a>
-            </li>
-          </ul>
-        </nav>
-        <div class="copyright-notice">
-          &copy 2022 Instagram
-        </div>
-      </div>
+      <!-- ... existing footer code ... -->
     </footer>
 
   </div>
+
+  <script>
+    // Prevent double submission
+    document.getElementById('post-form').addEventListener('submit', function() {
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Posting...';
+    });
+  </script>
 
 </body>
 

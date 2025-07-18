@@ -617,8 +617,8 @@
                                         <!-- Close X button -->
                                         <li class="close-wrap">
                                             <span class="close-publish">
-                    <i data-feather="x"></i>
-                  </span>
+                                                <i data-feather="x"></i>
+                                            </span>
                                         </li>
                                     </ul>
                                 </div>
@@ -1009,8 +1009,8 @@
                                                     <div id="compose-search" class="control is-hidden">
                                                         <input type="text" class="input" placeholder="Search People" />
                                                         <span>
-                          <i data-feather="search"></i>
-                        </span>
+                                        <i data-feather="search"></i>
+                                        </span>
                                                     </div>
                                                     <a href="javascript:void(0);" class="is-inverted modal-trigger" data-modal="create-group-modal">Create group</a>
                                                 </div>
@@ -1089,7 +1089,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                    </div>
          
 <body>
 {% load post_tags %}
@@ -1101,11 +1101,18 @@
             <!-- Post header -->
             <div class="card-heading">
                 <div class="user-block">
-                    <div class="image">
-                        {% if post.user.profile.image %}
-                            <img src="{{ post.user.profile.image.url }}" data-demo-src="{{ post.user.profile.image.url }}" data-user-popover="1" alt="" />
-                        {% endif %}
-                    </div>
+{% if post.user.profile.image %}
+    <img src="{{ post.user.profile.image.url }}" 
+         data-demo-src="{{ post.user.profile.image.url }}" 
+         data-user-popover="{{ post.user.id }}"
+         data-user-username="{{ post.user.username }}"
+         data-user-firstname="{{ post.user.profile.first_name|default:'' }}"
+         data-user-lastname="{{ post.user.profile.last_name|default:'' }}"
+         data-user-location="{{ post.user.profile.location|default:'' }}"
+         data-user-bio="{{ post.user.profile.bio|default:'' }}"
+         data-user-url="{{ post.user.profile.url|default:'' }}"
+         alt="{{ post.user.username }}" />
+{% endif %}
                     <div class="user-info">
                         <a href="{{ post.user.username }}">
                             {% if post.user.profile.first_name %}
@@ -1170,10 +1177,50 @@
                     </p>
                 </div>
                 <div class="post-image">
+                    {% if post.picture %}
                     <a data-fancybox="post{{ post.id }}" data-lightbox-type="comments" data-thumb="{{ post.picture.url }}" href="{% url 'post-details' post.id %}" data-demo-href="{{ post.picture.url }}">
                         <img src="{{ post.picture.url }}" data-demo-src="{{ post.picture.url }}" alt="" />
                     </a>
-
+                    
+                    {% elif post.video or post.video_link %}
+                    <!-- Featured youtube video -->
+                                    <div class="post-link is-video">
+                                        <!-- Link image -->
+                                         {% if post.video %}
+                                        <div class="link-image">
+                                            <img src="https://via.placeholder.com/300x300" data-demo-src="{% if post.profile_video %}{{ post.profile_video.url }}{% endif %}" alt="" />
+                                            <div class="video-overlay"></div>
+                                            <a class="video-button" data-fancybox href="{{ post.video.url }}">
+                                                <img src="{% static 'assets/img/icons/video/play.svg' %}" alt="" />
+                                            </a>
+                                         {% else %}
+                                        <div class="link-image">
+                                            <img src="https://via.placeholder.com/300x300" data-demo-src="{% if post.profile_video %}{{ post.profile_video.url }}{% endif %}" alt="" />
+                                            <div class="video-overlay"></div>
+                                            <a class="video-button" data-fancybox href="{% if post.video %}{{ post.video.url }}{% else %}{{ post.video_link }}{% endif %}">
+                                                <img src="{% static 'assets/img/icons/video/play.svg' %}" alt="" />
+                                            </a>
+                                        
+                                        {% endif %}
+                                         <!-- Link content -->
+                                         </div>
+                                        <div class="link-content">
+                                            <h4>
+                                                <a href="#">What's new in Bootstrap 4 ?</a>
+                                            </h4>
+                                            <p>
+                                                Before I create the new Bootstrap 4 crash course I want to go over
+                                                some of the changes from Bootstrap 3.
+                                            </p>
+                                            <small>Youtube.com</small>
+                                    </div>
+                                       
+                                    </div>
+                                    
+                                       
+                                    
+                                        {% endif %}
+                                        <!-- Post actions -->
                     <!-- Rest of your template code -->
                     <div class="like-wrapper">
                         {% if request.user.is_authenticated %}
@@ -1214,10 +1261,21 @@
                 </div>
             </div>
             <!-- Post footer -->
+
+            <!-- Post footer -->
             <div class="card-footer">
+                <!-- In your index.html -->
                 <div class="likers-group">
                     {% for like in post.post_likes.all|slice:":4" %}
-                        <img src="{{ like.user.profile.image.url }}" data-user-popover="{{ like.user.id }}" alt="{{ like.user.username }}" />
+                        <img src="{{ like.user.profile.image.url }}" 
+                            data-user-popover="{{ like.user.id }}" 
+                            data-user-username="{{ like.user.username }}"
+                            data-user-firstname="{{ like.user.profile.first_name }}"
+                            data-user-lastname="{{ like.user.profile.last_name }}"
+                            data-user-location="{{ like.user.profile.location }}"
+                            data-user-bio="{{ like.user.profile.bio }}"
+                            data-user-url="{{ like.user.profile.url }}"
+                            alt="{{ like.user.username }}" />
                     {% endfor %}
                 </div>
                 <div class="likers-text">
@@ -1315,7 +1373,6 @@
     </div>
     <!-- /POST -->
 {% endfor %}
-
 
 <style>
 
@@ -1884,11 +1941,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                                         <p></p>
                                     </div>
+
                                     <!-- Featured youtube video -->
                                     <div class="post-link is-video">
                                         <!-- Link image -->
                                         <div class="link-image">
-                                            <img src="https://via.placeholder.com/300x300" data-demo-src="{% static 'assets/img/demo/video/bootstrap.jpg' %}" alt="" />
+                                            <img src="https://via.placeholder.com/300x300" data-demo-src="{% static 'defaultbjp.jpg' %}" alt="" />
                                             <div class="video-overlay"></div>
                                             <a class="video-button" data-fancybox href="https://www.youtube.com/watch?v=N8GksI_-iIM">
                                                 <img src="{% static 'assets/img/icons/video/play.svg' %}" alt="" />
@@ -1917,6 +1975,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <span class="like-count">{{ post.likes }}</span>
                                         </a>
                                     </div>
+                                    {% comment %} {% endif %} {% endcomment %}
 
                                         <div class="fab-wrapper is-share">
                                             <a href="javascript:void(0);" class="small-fab share-fab modal-trigger" data-modal="share-modal">
@@ -6785,4 +6844,5 @@ async function loadUsers() {
   }
 }
 </script>
+
 {% endblock %}

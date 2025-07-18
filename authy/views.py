@@ -64,6 +64,7 @@ def UserProfile(request, username):
 
     return render(request, 'profile.html', context)
 
+
 def EditProfile(request):
     user = request.user.id
     profile = Profile.objects.get(user__id=user)

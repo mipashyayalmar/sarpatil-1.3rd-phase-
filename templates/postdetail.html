@@ -4,41 +4,41 @@
 
 {% block content %}
 <head>
-    <style>
+<style>
         
 
-.date {
-    font-size: 11px
-}
+                    .date {
+                        font-size: 11px
+                    }
 
-.comment-text {
-    font-size: 12px
-}
+                    .comment-text {
+                        font-size: 12px
+                    }
 
-.fs-12 {
-    font-size: 12px
-}
+                    .fs-12 {
+                        font-size: 12px
+                    }
 
-.shadow-none {
-    box-shadow: none
-}
+                    .shadow-none {
+                        box-shadow: none
+                    }
 
-.name {
-    color: #007bff
-}
+                    .name {
+                        color: #007bff
+                    }
 
-.cursor:hover {
-    color: blue
-}
+                    .cursor:hover {
+                        color: blue
+                    }
 
-.cursor {
-    cursor: pointer
-}
+                    .cursor {
+                        cursor: pointer
+                    }
 
-.textarea {
-    resize: none
-}
-    </style>
+                    .textarea {
+                        resize: none
+                    }
+</style>
 </head>
     <main class="main-container">
         <section class="content-container">
@@ -67,7 +67,177 @@
 
                         <div class="post__content">
                             <div class="post__medias">
-                                <a href="{% url 'post-details' post.id %}"><img class="post__media" src="{{ post.picture.url }}" alt="Post Content" style="width:1000%; object-fit: contain;"></a><!--                                <img class="post__media" src="{% static 'assets1/insta-clone.png' %}" alt="Post Content">--><!--                                <img class="post__media" src="{% static 'assets1/insta-clone.png' %}" alt="Post Content">-->
+                                
+                                <a href="{% url 'post-details' post.id %}">
+    <div class="post-media-container">
+        {% if post.picture %}
+            <!-- Image Post -->
+            <img class="post__media" 
+                 src="{{ post.picture.url }}" 
+                 alt="{% if post.caption %}{{ post.caption|truncatechars:100 }}{% else %}Post image{% endif %}"
+                 style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+        
+        {% elif post.video %}
+            <!-- Uploaded Video Post -->
+            <div class="video-wrapper">
+                <video class="post__media video-player" 
+                       poster="{% if post.profile_video %}{{ post.profile_video.url }}{% endif %}"
+                       controls
+                       style="max-width: 100%; max-height: 80vh;">
+                    <source src="{{ post.video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+            </div>
+        
+        {% elif post.video_link %}
+            <!-- Video Link Post -->
+            <div class="video-link-wrapper">
+                {% if post.profile_video %}
+                    <img src="{{ post.profile_video.url }}" 
+                         class="video-thumbnail"
+                         alt="Video thumbnail"
+                         style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+                {% else %}
+                    <div class="video-link-placeholder">
+                        <i class="fas fa-video"></i>
+                        <span>Video Link</span>
+                    </div>
+                {% endif %}
+                <div class="video-link-overlay">
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+            </div>
+        
+        {% else %}
+            <!-- Text/Quote Post -->
+            <div class="text-post-content">
+                <blockquote>
+                    {{ post.text_quote|default:post.caption|truncatechars:500 }}
+                </blockquote>
+            </div>
+        {% endif %}
+    </div>
+</a>
+
+<style>
+    .post-media-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f5f5f5;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 0 auto;
+        max-width: 100%;
+    }
+    
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+    }
+    
+    .video-player {
+        background: #000;
+    }
+    
+    .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 3rem;
+        pointer-events: none;
+    }
+    
+    .video-link-wrapper {
+        position: relative;
+        width: 100%;
+        background: #000;
+        min-height: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .video-thumbnail {
+        max-height: 80vh;
+    }
+    
+    .video-link-placeholder {
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .video-link-placeholder i {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .video-link-overlay {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: white;
+        background: rgba(0,0,0,0.5);
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+    
+    .text-post-content {
+        padding: 30px;
+        background: white;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .text-post-content blockquote {
+        font-style: italic;
+        font-size: 1.2rem;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle video link clicks
+    document.querySelectorAll('.video-link-wrapper').forEach(wrapper => {
+        wrapper.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postLink = this.closest('a').href;
+            window.open(postLink, '_blank');
+        });
+    });
+    
+    // Handle video play on click
+    document.querySelectorAll('.video-wrapper').forEach(wrapper => {
+        const video = wrapper.querySelector('video');
+        const overlay = wrapper.querySelector('.video-overlay');
+        
+        wrapper.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (video.paused) {
+                video.play();
+                overlay.style.display = 'none';
+            } else {
+                video.pause();
+                overlay.style.display = 'flex';
+            }
+        });
+    });
+});
+</script><!--                                <img class="post__media" src="{% static 'assets1/insta-clone.png' %}" alt="Post Content">--><!--                                <img class="post__media" src="{% static 'assets1/insta-clone.png' %}" alt="Post Content">-->
                             </div>
                         </div>
 

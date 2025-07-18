@@ -39,12 +39,20 @@ class Tag(models.Model):
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    picture = models.ImageField(upload_to=user_directory_path, verbose_name="Picture")
-    caption = models.CharField(max_length=10000, verbose_name="Caption")
-    posted = models.DateField(auto_now_add=True)
+    picture = models.ImageField(upload_to=user_directory_path, verbose_name="Picture", null=True, blank=True)
+    video = models.FileField(upload_to=user_directory_path, verbose_name="Video", null=True, blank=True)
+    caption = models.TextField(max_length=10000, verbose_name="Caption")
+    text_quote = models.TextField(max_length=10000, verbose_name="Text/Quote", null=True, blank=True)
+    link = models.URLField(max_length=500, verbose_name="Link", null=True, blank=True)
+    video_link = models.URLField(max_length=500, verbose_name="Link", null=True, blank=True)
+    profile_video = models.ImageField(upload_to=user_directory_path, verbose_name="Picture", null=True, blank=True)
+    location = models.CharField(max_length=500, verbose_name="Location", null=True, blank=True)
+    posted = models.DateTimeField(auto_now_add=True)
+    scheduled_date = models.DateTimeField(null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name="tags")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     likes = models.IntegerField(default=0)
+    
 
     def get_absolute_url(self):
         return reverse("post-details", args=[str(self.id)])

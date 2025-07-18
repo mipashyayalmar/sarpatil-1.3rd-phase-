@@ -1,2 +1,133 @@
-/*! popovers-users.js | Friendkit | © Css Ninja. 2019-2020 */
-"use strict";function getUserPopovers(){$("*[data-user-popover]").each((function(){var n=$(this),s=$(this).attr("data-user-popover"),e=feather.icons["message-circle"].toSvg(),a=feather.icons["more-horizontal"].toSvg(),o=feather.icons["map-pin"].toSvg(),i=feather.icons.users.toSvg(),r=feather.icons.bookmark.toSvg();$.ajax({url:"assets/data/api/users/users.json",async:!0,dataType:"json",success:function(t){n.webuiPopover({trigger:"hover",placement:"auto",width:300,padding:!1,offsetLeft:0,offsetTop:20,animation:"pop",cache:!1,content:function(){setTimeout((function(){$(".loader-overlay").removeClass("is-active")}),1e3);return'\n                                <div class="profile-popover-block">\n\n                                    <div class="loader-overlay is-active">\n                                        <div class="loader is-loading"></div>\n                                    </div>\n\n                                    <div class="profile-popover-wrapper">\n                                        <div class="popover-cover">\n                                            <img src="'+t[s].cover_image+'">\n                                            <div class="popover-avatar">\n                                                <img class="avatar" src="'+t[s].profile_picture+'">\n                                            </div>\n                                        </div>\n\n                                        <div class="popover-meta">\n                                            <span class="user-meta">\n                                                <span class="username">'+t[s].first_name+" "+t[s].last_name+'</span>\n                                            </span>\n                                            \x3c!--span class="job-title">'+t[s].title+'</span--\x3e\n                                            <div class="common-friends">\n                                                '+i+'\n                                                <div class="text">\n                                                    '+t[s].common_friends+' mutual friend(s)\n                                                </div>\n                                            </div>\n                                            <div class="user-location">\n                                                '+o+'\n                                                <div class="text">\n                                                    From <a href="#">'+t[s].location+'</a>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                    <div class="popover-actions">\n\n                                        <a href="#" class="popover-icon">\n                                            '+a+'\n                                        </a>\n                                        <a href="#" class="popover-icon">\n                                            '+r+'\n                                        </a>\n                                        <a href="#" class="popover-icon">\n                                            '+e+"\n                                        </a>\n                                    </div>\n                                </div>\n                            "}})}})}))}$((function(){getUserPopovers()}));
+/*! popovers-users.js */
+"use strict";
+
+function getUserPopovers() {
+    $("*[data-user-popover]").each(function() {
+        var element = $(this);
+        var userId = element.attr("data-user-popover");
+        var username = element.attr("data-user-username");
+        var firstname = element.attr("data-user-firstname");
+        var lastname = element.attr("data-user-lastname");
+        var location = element.attr("data-user-location");
+        var bio = element.attr("data-user-bio");
+        var profileUrl = element.attr("data-user-url");
+        var profileImage = element.attr("src") || element.attr("data-demo-src");
+
+        // Feather icons
+        var messageIcon = feather.icons["message-circle"].toSvg();
+        var moreIcon = feather.icons["more-horizontal"].toSvg();
+        var locationIcon = feather.icons["map-pin"].toSvg();
+        var friendsIcon = feather.icons.users.toSvg();
+        var bookmarkIcon = feather.icons.bookmark.toSvg();
+
+        // Check if we have enough data to show popover without API call
+        if (username && profileImage) {
+            element.webuiPopover({
+                trigger: "hover",
+                placement: "auto",
+                width: 300,
+                padding: false,
+                offsetLeft: 0,
+                offsetTop: 20,
+                animation: "pop",
+                cache: false,
+                content: function() {
+                    setTimeout(function() {
+                        $(".loader-overlay").removeClass("is-active");
+                    }, 1000);
+                    
+                    return `
+                        <div class="profile-popover-block">
+                            <div class="loader-overlay is-active">
+                                <div class="loader is-loading"></div>
+                            </div>
+
+                            <div class="profile-popover-wrapper">
+                                <div class="popover-cover">
+                                    <img src="${profileImage}" style="width: 100%; height: 80px; object-fit: cover;">
+                                    <div class="popover-avatar">
+                                        <img class="avatar" src="${profileImage}">
+                                    </div>
+                                </div>
+
+                                <div class="popover-meta">
+                                    <span class="user-meta">
+                                        <span class="username">${firstname || ''} ${lastname || ''}</span>
+                                    </span>
+                                    <span class="job-title">@${username}</span>
+                                    ${bio ? `<div class="user-bio">${bio}</div>` : ''}
+                                    ${location ? `
+                                    <div class="user-location">
+                                        ${locationIcon}
+                                        <div class="text">
+                                            From <a href="#">${location}</a>
+                                        </div>
+                                    </div>` : ''}
+                                </div>
+                            </div>
+                            <div class="popover-actions">
+                                <a href="#" class="popover-icon" data-action="more">
+                                    ${moreIcon}
+                                </a>
+                                <a href="#" class="popover-icon" data-action="bookmark">
+                                    ${bookmarkIcon}
+                                </a>
+                                <a href="/profile/${username}" class="popover-icon" data-action="message">
+                                    ${messageIcon}
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        } else {
+            // Fallback for cases where we don't have all data attributes
+            // This could be used for elements that don't have all the data attributes
+            // but you might want to remove this if you're sure all elements will have the data
+            element.webuiPopover({
+                trigger: "hover",
+                placement: "auto",
+                width: 300,
+                padding: false,
+                offsetLeft: 0,
+                offsetTop: 20,
+                animation: "pop",
+                cache: false,
+                content: function() {
+                    return `
+                        <div class="profile-popover-block">
+                            <div class="profile-popover-wrapper">
+                                <div class="popover-cover">
+                                    <div style="background: #f5f5f5; width: 100%; height: 80px;"></div>
+                                    <div class="popover-avatar">
+                                        <img class="avatar" src="${profileImage || '/static/images/default-avatar.png'}">
+                                    </div>
+                                </div>
+                                <div class="popover-meta">
+                                    <span class="user-meta">
+                                        <span class="username">User</span>
+                                    </span>
+                                    <div class="text-muted">Loading user information...</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+    });
+}
+
+$(document).ready(function() {
+    // Initialize feather icons
+    feather.replace();
+    
+    // Initialize popovers
+    getUserPopovers();
+
+    // Reinitialize popovers after AJAX content loads (if needed)
+    $(document).ajaxComplete(function() {
+        feather.replace();
+        getUserPopovers();
+    });
+});
