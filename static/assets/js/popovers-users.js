@@ -12,6 +12,7 @@ function getUserPopovers() {
         var bio = element.attr("data-user-bio");
         var profileUrl = element.attr("data-user-url");
         var profileImage = element.attr("src") || element.attr("data-demo-src");
+        var backgroundImage = element.attr("data-user-background") || "/static/images/default-background.jpg"; // Add this line
 
         // Feather icons
         var messageIcon = feather.icons["message-circle"].toSvg();
@@ -44,7 +45,8 @@ function getUserPopovers() {
 
                             <div class="profile-popover-wrapper">
                                 <div class="popover-cover">
-                                    <img src="${profileImage}" style="width: 100%; height: 80px; object-fit: cover;">
+                                    <!-- Updated to use background image -->
+                                    <img src="${backgroundImage}" style="width: 100%; height: 80px; object-fit: cover;">
                                     <div class="popover-avatar">
                                         <img class="avatar" src="${profileImage}">
                                     </div>
@@ -82,8 +84,6 @@ function getUserPopovers() {
             });
         } else {
             // Fallback for cases where we don't have all data attributes
-            // This could be used for elements that don't have all the data attributes
-            // but you might want to remove this if you're sure all elements will have the data
             element.webuiPopover({
                 trigger: "hover",
                 placement: "auto",
@@ -98,7 +98,7 @@ function getUserPopovers() {
                         <div class="profile-popover-block">
                             <div class="profile-popover-wrapper">
                                 <div class="popover-cover">
-                                    <div style="background: #f5f5f5; width: 100%; height: 80px;"></div>
+                                    <img src="${backgroundImage}" style="width: 100%; height: 80px; object-fit: cover;">
                                     <div class="popover-avatar">
                                         <img class="avatar" src="${profileImage || '/static/images/default-avatar.png'}">
                                     </div>

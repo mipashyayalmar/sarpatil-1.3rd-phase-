@@ -13,7 +13,8 @@ from post.models import Post
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="profile_pciture", null=True, default="default.jpg")
+    image = models.ImageField(upload_to="profile_pciture", null=True, default="static/default.jpg")
+    background_image = models.ImageField(upload_to="profile_pciture", null=True, default="static/default.jpg")
     first_name = models.CharField(max_length=200, null=True, blank=True)
     last_name = models.CharField(max_length=200, null=True, blank=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
@@ -35,10 +36,10 @@ class Profile(models.Model):
         return True
 
     def save(self, *args, **kwargs):
-        # Handle image resizing
         super().save(*args, **kwargs)
         
-        if self.image:
+        # Handle profile image resizing
+        if self.image and self.image.name != "static/default.jpg":
             try:
                 img = Image.open(self.image.path)
                 if img.height > 300 or img.width > 300:
@@ -47,9 +48,17 @@ class Profile(models.Model):
                     img.save(self.image.path)
             except FileNotFoundError:
                 pass
-
-    def __str__(self):
-        return f'{self.user.username} - Profile'
+                
+        # Handle background image resizing
+        if self.background_image and self.background_image.name != "static/default.jpg":
+            try:
+                bg_img = Image.open(self.background_image.path)
+                if bg_img.height > 800 or bg_img.width > 1200:  # Adjust dimensions as needed
+                    output_size = (1200, 800)
+                    bg_img.thumbnail(output_size)
+                    bg_img.save(self.background_image.path)
+            except FileNotFoundError:
+                pass
 
 
 def create_user_profile(sender, instance, created, **kwargs):

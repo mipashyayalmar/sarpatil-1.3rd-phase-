@@ -431,9 +431,9 @@
                     <div id="account-dropdown" class="navbar-item is-account drop-trigger has-caret">
                         <div class="user-image">
                             {% if request.user.profile.image %}
-                                <img class="is-rounded" src="{{ request.user.profile.image.url }}" data-user-popover="{{ request.user.id }}" alt="" />
+                                <img class="is-rounded" src="{{ request.user.profile.image.url }}"alt="" />
                             {% else %} 
-                            <img class="is-rounded" src="{% static 'bjp-default.jpg' %}" data-user-popover="{{ request.user.id }}" alt="" />
+                            <img class="is-rounded" src="{% static 'bjp-default.jpg' %}" />
                             {% endif %}
                             <span class="indicator"></span>
                         </div>
